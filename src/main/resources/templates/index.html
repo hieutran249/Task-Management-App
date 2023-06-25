@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo Application</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.2/css/bootstrap.min.css}" />
+    <link th:rel="stylesheet" th:href="@{/webjars/boostrap-icons/1.10.2/bootstrap-icons.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/webjars/bootstrap/5.2.2/js/bootstrap.min.js}"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Todos Application</h1>
+        <hr/>
+
+        <!--    Create task btn    -->
+        <p>
+            <a class="btn btn-outline-success icon-link" href="/create-task-form">
+                <i class="bi bi-plus"></i> Create a Task
+            </a>
+        </p>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Deadline</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="task : ${tasks}" th:class="${task.status.name().equals('ON_GOING')} ?
+                    'alert alert-warning' : 'alert alert-success'"
+                    th:classappend="${task.status.name().equals('LATE')} ? 'alert alert-danger'">
+                    <td th:text="${task.getDescription()}"/>
+                    <td th:text="${task.getStatus()}"/>
+                    <td th:text="${#dates.format(task.getDeadline(), 'dd/MM/yyyy')}"/>
+                    <td th:text="${#dates.format(task.getCreatedAt(), 'dd/MM/yyyy')}"/>
+                    <td th:text="${#dates.format(task.getUpdatedAt(), 'dd/MM/yyyy')}"/>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <!--    Edit task btn    -->
+                            <p>
+                                <a class="btn btn-warning" th:href="@{/edit-task-form/{id}(id=${task.getId()})}">
+                                    <i class="bi bi-pencil-fill"></i> Edit
+                                </a>
+                            </p>
+                            <!--    Delete task btn    -->
+                            <p>
+                                <a class="btn btn-danger btn" th:href="@{/delete-task/{id}(id=${task.getId()})}">
+                                    <i class="bi bi-trash-fill"></i> Delete
+                                </a>
+                            </p>
+                            <!--    Done task btn    -->
+                            <p>
+                                <a th:class="${task.status.name().equals('COMPLETED')} ? 'hidden'
+                                   : 'btn btn-primary'"
+                                   th:href="@{/finish-task/{id}(id=${task.getId()})}">
+                                    <i class="bi bi-check-circle-fill"></i> Done
+                                </a>
+                            </p>
+
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
